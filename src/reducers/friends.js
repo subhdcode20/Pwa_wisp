@@ -1,5 +1,18 @@
-export default function ng(state = [], action) {
+export default function ng(state = {
+	friends: [],
+	me: {},
+	lastChats : [],
+	botChats : [],
+	chats: [],
+	isLoading: true,
+	timestamp: '',
+	noReload: false,
+	meetingData: {},
+	childListeners: [],
+	triggerStamp: {},
 
+}, action) {
+	console.log('initial friends reducer state= ', state);
 	const tempState = { ...state };
 	let friends;
 	let me;
@@ -11,6 +24,7 @@ export default function ng(state = [], action) {
 			return { ...tempState, isLoading: true }
 			break;
 		case 'FRIENDS_LIST':
+		console.log('FRIENDS_LIST reducer data = ', action.payload);
 			let isError = true;
 			let isLoading = true;
 			if(
@@ -63,7 +77,9 @@ export default function ng(state = [], action) {
 			break;
 
 		case 'LAST_MSG':
+		console.log('LAST_MSG reducer = ', action.payload);
 			lastChats = { ...tempState.lastChats };
+			console.log('lastChats= ', lastChats);
 			lastChats[action.payload.id] = action.payload.msg;
 			localStorage.setItem('NG_PWA_LAST_MSG', JSON.stringify(lastChats));
 			return { ...tempState, lastChats }
@@ -113,6 +129,7 @@ export default function ng(state = [], action) {
 			break;
 
 		case 'ADD_CHATS':
+		console.log("ADD_CHATS reducer")
 			const myMeetingId = action.payload.meetingId;
 			const myMsg = action.payload.msg;
 			const allChats = { ...tempState.chats };
@@ -142,4 +159,5 @@ export default function ng(state = [], action) {
 		default:
 			return tempState;
 	}
+	console.log('friends after reducer update: ', state);
 }

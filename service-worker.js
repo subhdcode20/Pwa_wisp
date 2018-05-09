@@ -49,12 +49,12 @@ self.addEventListener('activate', function(e) {
     return self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.open(cacheName).then(function (cache) {
-            return caches.match(event.request).then(response => {
-                return response || fetch(event.request);
-            });
-        })
-    );
-});
+// self.addEventListener('fetch', event => {
+//     event.respondWith(
+//         caches.open(cacheName).then(function (cache) {
+//             return caches.match(event.request).then(response => {
+//                 return response || fetch(event.request);
+//             });
+//         })
+//     );
+// });

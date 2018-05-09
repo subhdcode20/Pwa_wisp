@@ -39,7 +39,7 @@ class FriendList extends Component {
 				})
 				e.target.src = AVTAR;
 			}
-			
+
 		}catch(e){}
 	}
 
@@ -55,6 +55,8 @@ class FriendList extends Component {
 
 	populateFriendsList() {
 		const { friends, lastChats } = this.props;
+		console.log('friendList index populateFriendsList friends and lastChats = ', friends, lastChats);
+		// set friends last msg and time and sort for latest time
 		const sortedFriends = sortFriendList(friends, lastChats) || [];
 	  	const AvtarUrl = 'https://img.neargroup.me/project/forcesize/50x50/profile_';
 		return sortedFriends.map( friend => {
@@ -80,6 +82,7 @@ class FriendList extends Component {
 	}
 
   	render() {
+			console.log('Friends list render= ', this.props);
 		const { loading, friends } = this.props;
 	    return (
 			<div>
@@ -112,11 +115,12 @@ class FriendList extends Component {
 }
 
 const mapStateToProps = state => {
+	console.log('mapStateToProps in FriendsList index= ', state);
     return {
     	friends: state.friends.friends || [],
     	loading: state.friends.isLoading || false,
-		timestamp : state.friends.timestamp || 0,
-		lastChats: state.friends.lastChats || {}
+			timestamp : state.friends.timestamp || 0,
+			lastChats: state.friends.lastChats || {}
     }
 }
 

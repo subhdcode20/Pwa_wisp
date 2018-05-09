@@ -85,3 +85,9 @@
             right: 7px;
         }
 }
+
+.noMessages {
+  padding-top: 64px;
+  max-height: calc(100vh - 123px);
+  overflow-y: auto;
+}

@@ -9,22 +9,28 @@ export function showLoader() {
 }
 
 export const getFriends = (authId = '') => {
+    console.log('in getFriends ---- ', authId);
     const startTime = localStorage.getItem(`NG_PWA_START`) || Date.now();
     Store.dispatch(showLoader());
+    let url_ =  `https://wisp.neargroup.me/wisp/getFriends?id=${authId}&t=${startTime}`
+    console.log('getFriends url = ', url_);
     return axios({
         method: 'GET',
-        url: `${API}getFriends?id=${authId}&t=${startTime}`,
+        url: `${API}getFriends?id=${authId}&t=${startTime}`, //https://f0c3572e.ngrok.io/NG/
+        // url: url_,
         headers: {
             'Content-Type': 'application/json'
         }
     })
     .then( response => {
+      console.log('get friends response= ', response);
         return {
             type: 'FRIENDS_LIST',
             payload: response
         }
     })
     .catch( error => {
+      console.log('get friends error= ', error);
         return {
             type: 'FRIENDS_LIST',
             payload: { data: 0, error }
@@ -33,6 +39,7 @@ export const getFriends = (authId = '') => {
 }
 
 export const getFriendsChat = (channelId, friends) => {
+  console.log('GET FRIENDS CHAT - channelId, friends = ', channelId, friends);
     return axios({
         method: 'POST',
         url: `${API}getFriendsChat`,
@@ -45,12 +52,14 @@ export const getFriendsChat = (channelId, friends) => {
         }
     })
     .then( response => {
+      console.log('GET FRIENDS CHAT - api response = ', response);
         return {
             type: 'BOT_CHAT',
             payload: response
         }
     })
     .catch( error => {
+      console.log('GET FRIENDS CHAT - api error = ', error);
         return {
             type: 'BOT_CHAT',
             payload: { data: 0, error }

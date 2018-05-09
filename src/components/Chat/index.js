@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-
+import Subheader from 'material-ui/Subheader';
 import { Twemoji } from "react-emoji-render";
 import Avatar from "material-ui/Avatar";
 import TextField from "material-ui/TextField";
@@ -34,8 +34,10 @@ class Chat extends Component {
 	}
 
 	componentWillMount() {
+		console.log('chat index willMount props = ', this.props);
 		if(!this.props.data) return false;
 		const { data, fromId } = this.props;
+		// combine botchats and chats
 		this.props.setChats(data.meetingId);
 
 		window.onresize = () => {
@@ -43,6 +45,7 @@ class Chat extends Component {
 		}
 	}
 	componentWillReceiveProps(nextProps){
+		console.log('chat index nextProps = ', nextProps);
 		const { data, chats, childListeners, fromId } = nextProps;
 		const myChats = chats[data.meetingId];
 		this.setState({ chats: myChats });
@@ -53,8 +56,8 @@ class Chat extends Component {
 				lastChat = myChats[myChats.length - 1];
 			}
             this.startListening(lastChat);
-        } else {
-            this.setState({ loading: false });
+    } else {
+        this.setState({ loading: false });
 		}
 	}
 
@@ -86,6 +89,7 @@ class Chat extends Component {
 	}
 
 	sendPlz() {
+		console.log('in sendPlz props= ', this.props);
 		const { data, fromId } = this.props;
 		if (this.state.message.trim() === "") return false;
 		this.setState({
@@ -99,10 +103,12 @@ class Chat extends Component {
 			arrivedAt: Firebase.ServerValue.TIMESTAMP
 		};
 		this.setChat(chatObj);
+		// add message to firebase database
 		firebase
 			.database()
 			.ref(`/rooms/${data.meetingId}`)
 			.push(chatObj).then(res => {
+				console.log('firebase push chat res = ', res);
 				chatObj.id = res.key;
 				if (chatObj.id) {
 					this.storeChat(chatObj);
@@ -113,6 +119,7 @@ class Chat extends Component {
 			this.refs["autoFocus"].select();
 		} catch (e) {}
 
+		//if chatmate is online send notification
 		if (navigator.onLine) {
 			this.props.sendPush({
 				toChannelId: data.channelId,
@@ -123,8 +130,8 @@ class Chat extends Component {
 	}
 
 	startListening(lastChat) {
+		console.log('in startListening lastChat = ', lastChat);
 		const {data, fromId} = this.props;
-
 		//intercepts for any new message from firebase with check of lastchatId
 		if (lastChat && lastChat.id) {
 			firebase
@@ -166,15 +173,19 @@ class Chat extends Component {
 
 	handleChildAdd(snapshot, lastChat) {
 		const msg = snapshot.val();
+		console.log('handleChildAdd msg = ', msg);
 		const msgId = snapshot.key;
+		console.log('handleChildAdd key = ', msg);
 		msg.id = msgId;
 		if (
 			(lastChat && lastChat.id && lastChat.id === msgId) ||
 			(msg.fromId === this.props.fromId &&
 			parseInt(msg.sentTime, 10) > this.state.sentTime)
 		) {
+			console.log('found lastChat in handleChildAdd = ', lastChat, lastChat.id);
 			return true;
 		} else {
+			console.log('setChat and storeChat in handleChildAdd ', msg);
 			this.setChat(msg);
 			this.storeChat(msg);
 		}
@@ -185,13 +196,16 @@ class Chat extends Component {
 	};
 
 	setChat(msg) {
+		console.log('in setChat msg meetingId = ',this.props.data.meetingId);
 		this.props.addChats(this.props.data.meetingId, msg)
 	}
 
 	storeChat(msg) {
+		console.log("storeChat in localStorage = ", msg);
 		try {
 			const { data } = this.props;
 			const chats = JSON.parse(localStorage.getItem(`NG_PWA_CHAT_${data.meetingId}`)) || [];
+			console.log('chats in localStorage = ', chats);
 			chats.push(msg);
 			localStorage.setItem(
 				`NG_PWA_CHAT_${this.props.data.meetingId}`,
@@ -224,36 +238,43 @@ class Chat extends Component {
 					className={Styles.refresh}
 				/>
 			}
-			<div className={Styles.ChatBox} id="chatBox">
-				{this.state.chats.map((chat, index) => {
-					let newDay = "";
-					if (index === 0) {
-						newDay = formatDate(chat.sentTime);
-					} else {
-						const newDate = formatDate(chat.sentTime);
-						const oldDate = formatDate(
-							this.state.chats[index - 1].sentTime
-						);
-						if (newDate !== oldDate) {
-							newDay = newDate;
-						}
-					}
-					return(
-					<div key={index} className={chat.fromId == fromId ? Styles.self : ""}>
-						{newDay &&
-							<div className={Styles.newDay}>
-								{newDay}
-							</div>
-						}
-						<span className={Styles.chatlet}>
-							<Twemoji text={htmlDecode(chat.msg)} />
-						</span>
-						<span className={Styles.time}>
-							{formatTime(chat.sentTime)}
-						</span>
-					</div>);
-				})}
-			</div>
+			{
+				this.state.chats.length > 0 ?
+					(<div className={Styles.ChatBox} id="chatBox">
+						{this.state.chats.map((chat, index) => {
+							let newDay = "";
+							if (index === 0) {
+								newDay = formatDate(chat.sentTime);
+							} else {
+								const newDate = formatDate(chat.sentTime);
+								const oldDate = formatDate(
+									this.state.chats[index - 1].sentTime
+								);
+								if (newDate !== oldDate) {
+									newDay = newDate;
+								}
+							}
+							return(
+							<div key={index} className={chat.fromId == fromId ? Styles.self : ""}>
+								{newDay &&
+									<div className={Styles.newDay}>
+										{newDay}
+									</div>
+								}
+								<span className={Styles.chatlet}>
+									<Twemoji text={htmlDecode(chat.msg)} />
+								</span>
+								<span className={Styles.time}>
+									{formatTime(chat.sentTime)}
+								</span>
+							</div>);
+						})}
+					</div>)
+				:
+					(<div className={Styles.noMessages}>
+						<Subheader>No Messages found.</Subheader>
+					</div>)
+		}
 			<div className={Styles.actionBtns}>
 				<TextField
 					onChange={this.handleMsg}
@@ -280,6 +301,7 @@ class Chat extends Component {
 }
 
 const mapStateToProps = state => {
+	console.log('mapStateToProps in chat index= ', state);
 	return {
 		fromId: (state.friends.me && state.friends.me.channelId) || '',
 		data: state.friends.meetingData || null,

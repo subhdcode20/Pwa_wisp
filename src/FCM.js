@@ -22,6 +22,7 @@ export default function initialize(channelId) {
             // getting and setting up the token
             messaging.getToken()
                 .then(function(currentToken) {
+                    console.log('firebase token= ', currentToken);
                     if (currentToken) {
                         sendTokenToServer(currentToken, channelId)
                         console.log(currentToken);
@@ -37,6 +38,7 @@ export default function initialize(channelId) {
                 messaging
                     .getToken()
                     .then(function (refreshedToken) {
+                      console.log('firebase refreshed token= ', refreshedToken);
                         if (currentToken)
                             sendTokenToServer(refreshedToken, channelId);
                     })
@@ -79,4 +81,3 @@ function saveDenial(channelId) {
             timeStamp: Date.now()
         })
 }
-

@@ -18,7 +18,9 @@ export const htmlDecode = msg => {
 	try {
 		msg = msg.replace(/<(?:.|\n)*?>/gm, '');
 		const dummyElement = document.createElement('p');
-		dummyElement.innerHTML = msg;
+		// dummyElement.innerHTML = msg;
+		dummyElement.innerHTML = decodeURIComponent(JSON.parse('"' + msg.replace(/\"/g, '\\"') + '"') ) ;
+
 		const renderedContent = dummyElement.textContent;
 		return renderedContent;
 	}catch(e) {

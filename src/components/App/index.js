@@ -25,6 +25,7 @@ class List extends Component {
     }
 
     componentWillMount() {
+      console.log('localstorage in app index will mount', localStorage);
         this.props.getFriendsCache();
         document.addEventListener('touchstart', this.touchstartHandler, false);
         document.addEventListener('touchmove', this.stopTouchReload, false);
@@ -63,13 +64,15 @@ class List extends Component {
       }
 
     componentDidMount() {
-        if(navigator.onLine && !this.props.noReload){
+      console.log('localStorage, props in app index didMount = ', localStorage, this.props);
+        if(navigator.onLine ){ //&& !this.props.noReload
             let authId;
             const searchText = this.props.route.location.search;
             if(searchText && searchText.trim != ""){
                 const searchParams = searchText.split('=');
                 if(searchParams.length > 2) this.setState({ error: true });
                 authId = searchParams.pop();
+                console.log('GOT authId= ', authId);
                 localStorage.setItem('NG_PWA_AUTHID', JSON.stringify(authId));
             } else {
                 try{
@@ -81,6 +84,13 @@ class List extends Component {
     }
 
     componentWillReceiveProps(props) {
+      console.log('props in App index WillReceiveProps=', props, (
+          navigator.onLine &&
+          props.friends &&
+          props.friends.length != 0 &&
+          this.state.firstCall &&
+          !this.props.noReload
+      ));
         if(
             navigator.onLine &&
             props.friends &&
@@ -92,10 +102,14 @@ class List extends Component {
             this.setState({ firstCall: false });
             props.friends.forEach(friend => {
                 friendMeetingIds.push(friend.meetingId);
+                console.log('getting firebase room with meetingId ' + friend.meetingId + ' = ');
                 firebase.database().ref(`/rooms/${friend.meetingId}`)
                 .limitToLast(1)
                 .on('value', snap => {
                     const value = snap.val();
+
+                    console.log("firebase room result= ", value);
+
                     if (value) {
                         const msg = value[Object.keys(value)[0]];
                         this.props.getLastMsg(friend.meetingId, msg);
@@ -108,11 +122,17 @@ class List extends Component {
     }
 
     setFriendsChat(channelId, friendMeetingIds) {
+      console.log('app index setFriendsChat channelId and friendMeetingIds = ', channelId , friendMeetingIds);
         try{
             const botChats = JSON.parse(localStorage.getItem('NG_PWA_BOT_CHATS')) || {};
+            console.log('botChats= ', botChats);
             const storedFriends = Object.keys(botChats);
+            //filter botchats from meetingIds
             const newFriends = friendMeetingIds.filter(id => !storedFriends.includes(id));
-            if(newFriends.length !== 0) this.props.getFriendsChat(channelId, newFriends);
+            console.log('newFriends= ', newFriends);
+
+            // Commented only for testing..Uncomment for production
+            // if(newFriends.length !== 0) this.props.getFriendsChat(channelId, newFriends);
         }catch(e){}
     }
     processNotifications() {
@@ -131,6 +151,7 @@ class List extends Component {
     }
 
     render() {
+      console.log('app index render = ', this.props, this.state);
         const { me } = this.props;
 
         if(this.state.error || !me.channelId) return <div />;
@@ -153,6 +174,7 @@ class List extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log('mapStateToProps in app index= ', state);
     return {
         me: state.friends.me || {},
         friends: state.friends.friends || [],

@@ -1,15 +1,4 @@
 
-/*var CompressionPlugin = require('compression-webpack-plugin');
-
-new CompressionPlugin({
-          asset: "[path].gz[query]",
-          algorithm: "gzip",
-          test: /\.js$|\.css$|\.html$/,
-          threshold: 10240,
-          minRatio: 0.8
-        })
-
-        */
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
@@ -61,7 +50,7 @@ module.exports = {
             FIREBASE_MESSAGING_ID : JSON.stringify('590817841198'),  // JSON.stringify('485643019459'),
             FIREBASE_STORAGE_BUCKET : JSON.stringify('pwangtest-eefde.appspot.com'),  //JSON.stringify('test-neargroup.appspot.com'),
             // API: JSON.stringify('https://stark-chamber-45207.herokuapp.com/'), //JSON.stringify('http://localhost:8081/'),
-            API: JSON.stringify('https://ccbb684f.ngrok.io/NG/'),
+            API: JSON.stringify('https://workly.neargroup.me/abc/'),
             LIVEAPI: JSON.stringify('https://wisp.neargroup.me/wisp/'),
             AVTAR: JSON.stringify('avtar.svg'),
             'process.env': {
