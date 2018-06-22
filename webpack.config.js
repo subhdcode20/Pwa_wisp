@@ -57,19 +57,19 @@ module.exports = {
           uglifyOptions: {
             compress : {
               dead_code: true,
-              drop_console: true,
+              // drop_console: true,
               unused: true
             }
           }
         }),
         new webpack.DefinePlugin({
-            FIREBASE_APIKEY : JSON.stringify('AIzaSyAac6QDw8hcXnupbe4Z-LZ4MZror_bUn3A'),  //JSON.stringify('AIzaSyCS1Uk49GLk-jPgpz_l0rgCUO7gg5JFBsA'),
-            FIREBASE_AUTHDOMAIN : JSON.stringify('wisp-pwa-chat.firebaseapp.com'), //JSON.stringify('pwangtest-eefde.firebaseapp.com'),
-            FIREBASE_DATABASE_URL : JSON.stringify('https://wisp-pwa-chat.firebaseio.com'),  //JSON.stringify('https://pwangtest-eefde.firebaseio.com'),
-            FIREBASE_PROJECT_ID : JSON.stringify('wisp-pwa-chat'),  //JSON.stringify('pwangtest-eefde'),
-            FIREBASE_MESSAGING_ID : JSON.stringify('845040584381'),  //JSON.stringify('590817841198'),
-            FIREBASE_STORAGE_BUCKET : JSON.stringify('wisp-pwa-chat.appspot.com'),  //JSON.stringify('pwangtest-eefde.appspot.com'),
-            API: JSON.stringify('https://test.neargroup.me/xyz/'),
+            FIREBASE_APIKEY : JSON.stringify('AIzaSyCS1Uk49GLk-jPgpz_l0rgCUO7gg5JFBsA'),
+            FIREBASE_AUTHDOMAIN : JSON.stringify('pwangtest-eefde.firebaseapp.com'),
+            FIREBASE_DATABASE_URL : JSON.stringify('https://pwangtest-eefde.firebaseio.com'),
+            FIREBASE_PROJECT_ID : JSON.stringify('pwangtest-eefde'),
+            FIREBASE_MESSAGING_ID : JSON.stringify('590817841198'),
+            FIREBASE_STORAGE_BUCKET : JSON.stringify('pwangtest-eefde.appspot.com'),
+            API: JSON.stringify('https://wisppwa.neargroup.me/wisp/'),
             LIVEAPI: JSON.stringify('https://wisp.neargroup.me/wisp/'),
             AVTAR: JSON.stringify('avtar.svg'),
             ISDEV: true,

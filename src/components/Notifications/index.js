@@ -37,7 +37,7 @@ class Notifications extends Component {
 
     populateNotifications() {
         const { notifications } = this.props;
-        const AvtarUrl = 'https://img.neargroup.me/project/forcesize/65x65/pixelate_3/profile_';
+        const AvtarUrl = 'https://s3-us-west-2.amazonaws.com/wisp-image/ng/thumb/50_50_profile_'  //'https://img.neargroup.me/project/forcesize/65x65/pixelate_3/profile_';
         const iconButtonElement = (
             <IconButton touch={true} >
                 <MoreVertIcon color={grey400} />
@@ -84,7 +84,7 @@ class Notifications extends Component {
                     </List>
                 </div>
             </div>
-        );        
+        );
     }
 }
 

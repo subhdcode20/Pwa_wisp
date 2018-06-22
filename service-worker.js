@@ -3,8 +3,6 @@ const filesToCache = [
     '/',
     '/index.html',
     '/bundle.js',
-    '/logo.png',
-    '/notify.png',
     '/wisp-1024pxcircle.png',
     '/wisp.png',
     '/avtar.svg',

@@ -25,6 +25,7 @@ const newCompare = (a,b) => {
 }
 
 export const htmlDecode = msg => {
+	console.log("htmlDecode= ", msg);
 	try {
 		msg = msg.replace(/<(?:.|\n)*?>/gm, '');
 		const dummyElement = document.createElement('p');

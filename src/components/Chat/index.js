@@ -389,7 +389,7 @@ class Chat extends Component {
 		if(!data){
 			return <Redirect to="/" push />
 		}
-		const AvtarUrl = `https://img.neargroup.me/project/50x50/forcesize/50x50/profile_${data.imageUrl}`;
+		const AvtarUrl = `https://s3-us-west-2.amazonaws.com/wisp-image/ng/thumb/50_50_profile_${data.imageUrl}`   //`https://img.neargroup.me/project/50x50/forcesize/50x50/profile_${data.imageUrl}`;
 		const uccChat = localStorage.getItem("NG_PWA_UNREAD_COUNTS")
 
 		let lastTriggerStamp = localStorage.getItem(`CHAT_LAST_TRIGGERSTAMP_${data.meetingId}`)
@@ -438,7 +438,7 @@ class Chat extends Component {
 					// if(index > 0) {
 					// 	console.log(" -- ", Number(this.state.chats[index-1].sentTime));
 					// }
-					console.log("this.props.fromId= ", this.props.fromId);
+					console.log("msg= ", encodeURIComponent(chat.msg), decodeURIComponent(chat.msg));
 					if(index > 0
 						&& Number(chat.sentTime) > Number(lastTriggerStamp)
 						&& Number(this.state.chats[index-1].sentTime) < Number(lastTriggerStamp)
